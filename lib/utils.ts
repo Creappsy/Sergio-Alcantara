@@ -246,25 +246,63 @@ export async function uploadFiles(
 }
 
 // ═══════════════════════════════════════════════════════════════
-// 📧  SUBMIT FORM (via API route)
+// 📤  FORM SUBMISSION
 // ═══════════════════════════════════════════════════════════════
 
 export async function submitForm(
   data: Record<string, unknown>,
   fileUrls: Record<string, UploadedFile[]>
 ): Promise<{ success: boolean; message: string; submissionId?: string }> {
-  const payload = {
-    ...data,
-    _files: fileUrls,
-  };
+  const WEB3FORMS_KEY = config.web3formsKey;
+  const EMAIL_DESTINO = config.emailDestino;
+  
+  if (!WEB3FORMS_KEY || !EMAIL_DESTINO) {
+    return { 
+      success: false, 
+      message: 'Error: WEB3FORMS_KEY o EMAIL_DESTINO no configurados' 
+    };
+  }
+  
+  // Crear FormData para Web3Forms (envío directo desde cliente)
+  const formData = new FormData();
+  formData.append('access_key', WEB3FORMS_KEY);
+  formData.append('subject', `[Creappsy] Nueva solicitud de ${(data.brandName as string) || 'Artista'}`);
+  formData.append('from_name', (data.brandName as string) || 'Artista');
+  formData.append('email', (data.pressEmail as string) || '');
+  formData.append('to', EMAIL_DESTINO);
+  formData.append('botcheck', '');
+  
+  // Construir mensaje con toda la información
+  const messageContent = [
+    `Nombre Artístico: ${(data.brandName as string) || '-'}`,
+    `Manager/PR: ${(data.pressName as string) || '-'}`,
+    `Email de Contacto: ${(data.pressEmail as string) || '-'}`,
+    `Teléfono: ${(data.pressPhone as string) || '-'}`,
+    `Dominio Deseado: ${(data.domain as string) || '-'}`,
+    `Bio Corta: ${((data.bioShort as string) || '-').substring(0, 500)}`,
+    '',
+    '--- Redes Sociales ---',
+    (data.socialLinks as Array<{platform: string, url: string}>)?.map(s => `${s.platform}: ${s.url}`).join('\n') || 'Ninguna',
+    '',
+    '--- Archivos Subidos ---',
+    Object.keys(fileUrls).length > 0 
+      ? Object.entries(fileUrls).map(([field, files]) => {
+          const urls = files.map(f => f.url).join('\n  ');
+          return `${field}:\n  ${urls}`;
+        }).join('\n\n')
+      : 'Sin archivos',
+    '',
+    '--- Datos Completos ---',
+    JSON.stringify(data, null, 2),
+  ].join('\n');
+  
+  formData.append('message', messageContent);
 
   try {
-    const res = await fetch(SUBMIT_API_URL, {
+    // Enviar directamente a Web3Forms desde el cliente (evita Cloudflare)
+    const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
+      body: formData,
     });
 
     const resData = await res.json();
@@ -273,12 +311,12 @@ export async function submitForm(
       return { 
         success: true, 
         message: 'Enviado correctamente',
-        submissionId: resData.submissionId,
+        submissionId: resData.submissionId || `sub_${Date.now().toString(36)}`,
       };
     } else {
       return {
         success: false,
-        message: resData.message || 'Error al enviar',
+        message: resData.message || 'Error al enviar a Web3Forms',
       };
     }
   } catch (err) {
