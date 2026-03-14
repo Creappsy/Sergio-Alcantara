@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY!;
-const EMAIL_DESTINO = process.env.NEXT_PUBLIC_EMAIL_DESTINO!;
+const WEB3FORMS_KEY = process.env.WEB3FORMS_KEY || process.env.NEXT_PUBLIC_WEB3FORMS_KEY || '';
+const EMAIL_DESTINO = process.env.EMAIL_DESTINO || process.env.NEXT_PUBLIC_EMAIL_DESTINO || '';
 
 // Rate limiting en memoria (para producción usar Redis)
 const submissions = new Map<string, { count: number; firstAttempt: number; blocked: boolean; blockedUntil?: number }>();
