@@ -8,7 +8,16 @@ const GOFILE_TOKEN = process.env.GOFILE_TOKEN;
 const GOFILE_FOLDER_ID = process.env.GOFILE_FOLDER_ID;
 
 // Verificar si Backblaze está configurado
-const isB2Configured = B2_KEY_ID && B2_APPLICATION_KEY;
+const isB2Configured = !!(B2_KEY_ID && B2_APPLICATION_KEY);
+
+// Log de configuración al iniciar (solo en desarrollo)
+if (process.env.NODE_ENV === 'development') {
+  console.log('Upload config:', {
+    hasB2: isB2Configured,
+    hasGoFile: !!GOFILE_TOKEN,
+    bucket: B2_BUCKET_NAME
+  });
+}
 
 // Tipos de archivo permitidos
 const ALLOWED_TYPES = [
@@ -174,8 +183,9 @@ export async function POST(req: NextRequest) {
 
   } catch (error) {
     console.error('Upload error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Upload failed', message: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Upload failed', message: errorMessage, details: 'Check server logs for more information' },
       { status: 500 }
     );
   }

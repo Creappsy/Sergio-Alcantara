@@ -3,6 +3,14 @@ import { NextRequest, NextResponse } from 'next/server';
 const WEB3FORMS_KEY = process.env.WEB3FORMS_KEY || process.env.NEXT_PUBLIC_WEB3FORMS_KEY || '';
 const EMAIL_DESTINO = process.env.EMAIL_DESTINO || process.env.NEXT_PUBLIC_EMAIL_DESTINO || '';
 
+// Verificar configuración al iniciar
+if (!WEB3FORMS_KEY) {
+  console.error('ERROR: WEB3FORMS_KEY no está configurada');
+}
+if (!EMAIL_DESTINO) {
+  console.error('ERROR: EMAIL_DESTINO no está configurada');
+}
+
 // Rate limiting en memoria (para producción usar Redis)
 const submissions = new Map<string, { count: number; firstAttempt: number; blocked: boolean; blockedUntil?: number }>();
 const MAX_ATTEMPTS = 5;
@@ -67,6 +75,15 @@ function sanitizeInput(str: string): string {
 
 export async function POST(req: NextRequest) {
   try {
+    // Validar configuración antes de procesar
+    if (!WEB3FORMS_KEY || !EMAIL_DESTINO) {
+      console.error('Missing config:', { hasKey: !!WEB3FORMS_KEY, hasEmail: !!EMAIL_DESTINO });
+      return NextResponse.json(
+        { success: false, message: 'Server configuration error: Missing required environment variables' },
+        { status: 500 }
+      );
+    }
+
     const ip = getClientIP(req);
     
     // Rate limiting
