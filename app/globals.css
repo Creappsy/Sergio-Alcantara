@@ -1669,30 +1669,78 @@ body.high-contrast .section {
   grid-template-columns: repeat(2, 1fr);
 }
 
-/* Scroll to top button */
-.scroll-top-btn {
+/* ═══════════════════════════════════════════════════════════════
+   ⬆️ SCROLL TO TOP BUTTON
+   ═══════════════════════════════════════════════════════════════ */
+
+.scroll-top {
   position: fixed;
-  bottom: 20px;
+  bottom: 100px;
   right: 20px;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   background: var(--gradient-blood);
   border: 2px solid var(--blood-primary);
   border-radius: 50%;
   color: white;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all var(--transition-normal);
-  z-index: 100;
+  z-index: 99;
   box-shadow: var(--shadow-glow-blood);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
 }
 
-.scroll-top-btn:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0 30px rgba(220, 38, 38, 0.6);
+.scroll-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-top:hover {
+  background: var(--blood-bright);
+  border-color: var(--blood-glow);
+  transform: translateY(-4px) scale(1.1);
+  box-shadow: 0 0 30px rgba(220, 38, 38, 0.8);
+}
+
+.scroll-top:active {
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* Mobile positioning */
+@media (max-width: 768px) {
+  .scroll-top {
+    bottom: 80px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   📄 FOOTER
+   ═══════════════════════════════════════════════════════════════ */
+
+footer {
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg);
+  margin-top: var(--space-2xl);
+  border-top: 1px solid var(--gray-dark);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+}
+
+footer span {
+  color: var(--blood-glow);
+  font-weight: 600;
 }
 
 /* Voice guide panel additional styles */
