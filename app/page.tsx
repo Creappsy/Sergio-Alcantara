@@ -1415,37 +1415,27 @@ export default function FormPage() {
               </div>
               <div className="field full">
                 <label htmlFor="aiNotes">¿Usan IA para contenido?</label>
-                <div className="voice-input-container">
-                  <textarea
-                    id="aiNotes"
-                    name="aiNotes"
-                    value={formData.aiNotes}
-                    onChange={handleInputChange}
-                    placeholder="Blog automático, subtitulado, traducción, generación de imágenes…"
-                    rows={3}
-                  />
-                  <VoiceInputButton
-                    onTranscript={(text) => setFormData(prev => ({ ...prev, aiNotes: prev.aiNotes + text }))}
-                    language="es-ES"
-                  />
-                </div>
+                <VoiceGuidedInput
+                  fieldName="aiNotes"
+                  instructions={voiceInstructions.aiNotes}
+                  value={formData.aiNotes}
+                  onChange={handleInputChange}
+                  onTranscript={(text) => setFormData(prev => ({ ...prev, aiNotes: prev.aiNotes + text }))}
+                  placeholder="Blog automático, subtitulado, traducción, generación de imágenes…"
+                  rows={3}
+                />
               </div>
               <div className="field full">
                 <label htmlFor="extraNotes">¿Alguna restricción, fecha fija o detalle especial?</label>
-                <div className="voice-input-container">
-                  <textarea
-                    id="extraNotes"
-                    name="extraNotes"
-                    value={formData.extraNotes}
-                    onChange={handleInputChange}
-                    placeholder="Fecha de lanzamiento deseada, eventos próximos críticos…"
-                    rows={4}
-                  />
-                  <VoiceInputButton
-                    onTranscript={(text) => setFormData(prev => ({ ...prev, extraNotes: prev.extraNotes + text }))}
-                    language="es-ES"
-                  />
-                </div>
+                <VoiceGuidedInput
+                  fieldName="extraNotes"
+                  instructions={voiceInstructions.extraNotes}
+                  value={formData.extraNotes}
+                  onChange={handleInputChange}
+                  onTranscript={(text) => setFormData(prev => ({ ...prev, extraNotes: prev.extraNotes + text }))}
+                  placeholder="Fecha de lanzamiento deseada, eventos próximos críticos…"
+                  rows={4}
+                />
               </div>
             </div>
           </section>
