@@ -249,6 +249,13 @@ h1 span {
   letter-spacing: 0.05em;
 }
 
+.progress-divider {
+  margin: 0 var(--space-sm);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
 .progress-pct {
   font-family: var(--font-display);
   font-size: 0.875rem;

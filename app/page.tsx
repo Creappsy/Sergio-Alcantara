@@ -582,10 +582,11 @@ export default function FormPage() {
         </header>
 
       <div className="progress-wrap" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
-        <div className="progress-info">
-          <span className="progress-label">{sections[currentSection]?.name}</span>
-          <span className="progress-pct">{progress}% completado</span>
-        </div>
+<div className="progress-info">
+  <span className="progress-label">{sections[currentSection]?.name}</span>
+  <span className="progress-divider">|</span>
+  <span className="progress-pct">{progress}% completado</span>
+</div>
         <div className="progress-bar">
           <div className="progress-fill" style={{ width: `${progress}%` }} />
         </div>
