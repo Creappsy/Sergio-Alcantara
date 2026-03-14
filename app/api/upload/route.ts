@@ -1,22 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Configuración desde variables de entorno
-const B2_KEY_ID = process.env.B2_KEY_ID || '';
-const B2_APPLICATION_KEY = process.env.B2_APPLICATION_KEY || '';
-const B2_BUCKET_NAME = process.env.B2_BUCKET_NAME || 'creappsy';
-const GOFILE_TOKEN = process.env.GOFILE_TOKEN;
-const GOFILE_FOLDER_ID = process.env.GOFILE_FOLDER_ID;
+// Función para obtener variables de entorno en tiempo de ejecución
+function getEnvVars() {
+  return {
+    B2_KEY_ID: process.env.B2_KEY_ID || '',
+    B2_APPLICATION_KEY: process.env.B2_APPLICATION_KEY || '',
+    B2_BUCKET_NAME: process.env.B2_BUCKET_NAME || 'creappsy',
+    GOFILE_TOKEN: process.env.GOFILE_TOKEN,
+    GOFILE_FOLDER_ID: process.env.GOFILE_FOLDER_ID,
+  };
+}
 
 // Verificar si Backblaze está configurado
-const isB2Configured = !!(B2_KEY_ID && B2_APPLICATION_KEY);
-
-// Log de configuración al iniciar (solo en desarrollo)
-if (process.env.NODE_ENV === 'development') {
-  console.log('Upload config:', {
-    hasB2: isB2Configured,
-    hasGoFile: !!GOFILE_TOKEN,
-    bucket: B2_BUCKET_NAME
-  });
+function isB2Configured() {
+  const { B2_KEY_ID, B2_APPLICATION_KEY } = getEnvVars();
+  return !!(B2_KEY_ID && B2_APPLICATION_KEY);
 }
 
 // Tipos de archivo permitidos
@@ -36,6 +34,7 @@ async function authorizeB2() {
     return b2AuthCache;
   }
 
+  const { B2_KEY_ID, B2_APPLICATION_KEY } = getEnvVars();
   const credentials = Buffer.from(`${B2_KEY_ID}:${B2_APPLICATION_KEY}`).toString('base64');
   
   const res = await fetch('https://api.backblazeb2.com/b2api/v2/b2_authorize_account', {
@@ -96,10 +95,13 @@ async function uploadToBackblaze(file: File, folder: string): Promise<string> {
     throw new Error('Upload failed');
   }
 
+  const { B2_BUCKET_NAME } = getEnvVars();
   return `${auth.downloadUrl}/file/${B2_BUCKET_NAME}/${encodeURIComponent(fileName)}`;
 }
 
 async function uploadToGoFile(file: File, folder: string): Promise<string> {
+  const { GOFILE_TOKEN, GOFILE_FOLDER_ID } = getEnvVars();
+  
   // Obtener servidor
   const serverRes = await fetch('https://api.gofile.io/createServer');
   const serverData = await serverRes.json();
@@ -160,7 +162,7 @@ export async function POST(req: NextRequest) {
     let url: string;
 
     // Intentar Backblaze primero (si está configurado)
-    if (isB2Configured) {
+    if (isB2Configured()) {
       try {
         url = await uploadToBackblaze(file, folder);
       } catch (b2Error) {

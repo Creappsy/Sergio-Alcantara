@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const WEB3FORMS_KEY = process.env.WEB3FORMS_KEY || process.env.NEXT_PUBLIC_WEB3FORMS_KEY || '';
-const EMAIL_DESTINO = process.env.EMAIL_DESTINO || process.env.NEXT_PUBLIC_EMAIL_DESTINO || '';
-
-// Verificar configuración al iniciar
-if (!WEB3FORMS_KEY) {
-  console.error('ERROR: WEB3FORMS_KEY no está configurada');
-}
-if (!EMAIL_DESTINO) {
-  console.error('ERROR: EMAIL_DESTINO no está configurada');
+// Función para obtener variables de entorno en tiempo de ejecución
+function getEnvVars() {
+  return {
+    WEB3FORMS_KEY: process.env.WEB3FORMS_KEY || process.env.NEXT_PUBLIC_WEB3FORMS_KEY || '',
+    EMAIL_DESTINO: process.env.EMAIL_DESTINO || process.env.NEXT_PUBLIC_EMAIL_DESTINO || '',
+  };
 }
 
 // Rate limiting en memoria (para producción usar Redis)
@@ -75,9 +72,16 @@ function sanitizeInput(str: string): string {
 
 export async function POST(req: NextRequest) {
   try {
+    // Leer variables en tiempo de ejecución (para Dokploy)
+    const { WEB3FORMS_KEY, EMAIL_DESTINO } = getEnvVars();
+    
     // Validar configuración antes de procesar
     if (!WEB3FORMS_KEY || !EMAIL_DESTINO) {
-      console.error('Missing config:', { hasKey: !!WEB3FORMS_KEY, hasEmail: !!EMAIL_DESTINO });
+      console.error('Missing config:', { 
+        hasKey: !!WEB3FORMS_KEY, 
+        hasEmail: !!EMAIL_DESTINO,
+        env: Object.keys(process.env).filter(k => k.includes('WEB3') || k.includes('EMAIL'))
+      });
       return NextResponse.json(
         { success: false, message: 'Server configuration error: Missing required environment variables' },
         { status: 500 }
