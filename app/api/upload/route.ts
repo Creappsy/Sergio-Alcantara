@@ -34,7 +34,7 @@ async function authorizeB2() {
     return b2AuthCache;
   }
 
-  const { B2_KEY_ID, B2_APPLICATION_KEY } = getEnvVars();
+  const { B2_KEY_ID, B2_APPLICATION_KEY, B2_BUCKET_NAME } = getEnvVars();
   const credentials = Buffer.from(`${B2_KEY_ID}:${B2_APPLICATION_KEY}`).toString('base64');
   
   const res = await fetch('https://api.backblazeb2.com/b2api/v2/b2_authorize_account', {
@@ -49,17 +49,41 @@ async function authorizeB2() {
 
   const data = await res.json();
   
-  // Verificar que tenemos bucketId
-  if (!data.bucketId && data.allowed?.bucketId) {
-    data.bucketId = data.allowed.bucketId;
-  }
+  // Guardar datos de autenticación
+  b2AuthCache = {
+    authorizationToken: data.authorizationToken,
+    apiUrl: data.apiUrl,
+    downloadUrl: data.downloadUrl,
+    bucketId: '', // Lo obtendremos después
+  };
   
-  if (!data.bucketId) {
-    throw new Error('Backblaze auth succeeded but no bucketId found. Check your bucket permissions.');
-  }
-  
-  b2AuthCache = data as typeof b2AuthCache;
   b2AuthExpiry = Date.now() + 23 * 60 * 60 * 1000;
+  
+  // Ahora necesitamos obtener el bucketId listando los buckets
+  const bucketRes = await fetch(`${data.apiUrl}/b2api/v2/b2_list_buckets`, {
+    method: 'POST',
+    headers: {
+      'Authorization': data.authorizationToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ accountId: data.accountId }),
+  });
+  
+  if (!bucketRes.ok) {
+    const errorText = await bucketRes.text();
+    throw new Error(`Failed to list buckets: ${bucketRes.status} - ${errorText}`);
+  }
+  
+  const bucketData = await bucketRes.json();
+  
+  // Encontrar el bucket por nombre
+  const bucket = bucketData.buckets?.find((b: { bucketName: string }) => b.bucketName === B2_BUCKET_NAME);
+  
+  if (!bucket) {
+    throw new Error(`Bucket '${B2_BUCKET_NAME}' not found. Available buckets: ${bucketData.buckets?.map((b: { bucketName: string }) => b.bucketName).join(', ') || 'none'}`);
+  }
+  
+  b2AuthCache.bucketId = bucket.bucketId;
 
   return b2AuthCache;
 }
@@ -124,8 +148,8 @@ async function uploadToGoFile(file: File, folder: string): Promise<string> {
     throw new Error(`GoFile server response is not valid JSON: ${serverText.substring(0, 100)}`);
   }
   
-  // Intentar diferentes formatos de respuesta
-  const server = serverData.data?.server || serverData.servers?.[0]?.name;
+  // La API devuelve servers como array
+  const server = serverData.data?.servers?.[0]?.name;
   
   if (!server) {
     throw new Error(`Failed to get GoFile server. Response: ${JSON.stringify(serverData)}`);

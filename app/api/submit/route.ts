@@ -159,41 +159,39 @@ export async function POST(req: NextRequest) {
     const formData = new FormData();
     formData.append('access_key', WEB3FORMS_KEY);
     formData.append('subject', `[Creappsy] Nueva solicitud de ${sanitizeInput(body.brandName || 'Artista')}`);
+    formData.append('from_name', sanitizeInput(body.brandName || 'Artista'));
     formData.append('email', sanitizeInput(body.pressEmail));
     formData.append('to', EMAIL_DESTINO);
-    formData.append('from_name', sanitizeInput(body.brandName || 'Artista'));
     formData.append('botcheck', '');
-
-    // Campos principales
-    formData.append('Nombre Artístico', sanitizeInput(body.brandName || '-'));
-    formData.append('Manager/PR', sanitizeInput(body.pressName || '-'));
-    formData.append('Email de Contacto', sanitizeInput(body.pressEmail || '-'));
-    formData.append('Teléfono', sanitizeInput(body.pressPhone || '-'));
-    formData.append('Dominio Deseado', sanitizeInput(body.domain || '-'));
-    formData.append('Bio Corta', sanitizeInput((body.bioShort || '-').substring(0, 500)));
-
-    // Redes sociales
-    if (body.socialLinks && Array.isArray(body.socialLinks)) {
-      const socialText = body.socialLinks.map((s: { platform: string; url: string }) => 
-        `${s.platform}: ${sanitizeInput(s.url)}`
-      ).join('\n');
-      formData.append('Redes Sociales', socialText);
-    }
-
-    // Archivos
-    if (body._files && Object.keys(body._files).length > 0) {
-      const fileList: string[] = [];
-      for (const [field, files] of Object.entries(body._files)) {
-        if (Array.isArray(files)) {
-          const urls = (files as Array<{ url: string }>).map((f) => f.url).join('\n  ');
-          fileList.push(`${field}:\n  ${urls}`);
-        }
-      }
-      formData.append('Archivos Subidos', fileList.join('\n\n'));
-    }
-
-    // JSON completo
-    formData.append('json_completo', JSON.stringify(body, null, 2));
+    
+    // Campos personalizados en el mensaje
+    const messageContent = [
+      `Nombre Artístico: ${sanitizeInput(body.brandName || '-')}`,
+      `Manager/PR: ${sanitizeInput(body.pressName || '-')}`,
+      `Email de Contacto: ${sanitizeInput(body.pressEmail || '-')}`,
+      `Teléfono: ${sanitizeInput(body.pressPhone || '-')}`,
+      `Dominio Deseado: ${sanitizeInput(body.domain || '-')}`,
+      `Bio Corta: ${sanitizeInput((body.bioShort || '-').substring(0, 500))}`,
+      '',
+      '--- Redes Sociales ---',
+      body.socialLinks?.map((s: { platform: string; url: string }) => `${s.platform}: ${sanitizeInput(s.url)}`).join('\n') || 'Ninguna',
+      '',
+      '--- Archivos ---',
+      body._files && Object.keys(body._files).length > 0 
+        ? Object.entries(body._files).map(([field, files]) => {
+            if (Array.isArray(files)) {
+              const urls = (files as Array<{ url: string }>).map((f) => f.url).join('\n  ');
+              return `${field}:\n  ${urls}`;
+            }
+            return '';
+          }).join('\n\n')
+        : 'Sin archivos',
+      '',
+      '--- JSON Completo ---',
+      JSON.stringify(body, null, 2),
+    ].join('\n');
+    
+    formData.append('message', messageContent);
 
     // Enviar a Web3Forms
     console.log('Sending to Web3Forms...');
