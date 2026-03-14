@@ -496,7 +496,7 @@ export default function FormPage() {
               ✅ <strong>Datos y archivos enviados correctamente</strong>
               <br />
               <small style={{ opacity: 0.7 }}>
-                Revisa tu correo: <strong>{config.emailDestino}</strong>
+                Recibirás un correo de confirmación
               </small>
               <br />
               <small style={{ opacity: 0.7 }}>(revisa la carpeta de spam si no lo ves)</small>

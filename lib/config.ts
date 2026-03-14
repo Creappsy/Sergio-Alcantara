@@ -9,7 +9,7 @@ export const config: AppConfig = {
   b2BucketName: process.env.NEXT_PUBLIC_B2_BUCKET_NAME || '',
   gofileToken: '',
   gofileFolderId: '',
-  emailDestino: process.env.NEXT_PUBLIC_EMAIL_DESTINO || '',
+  emailDestino: process.env.NEXT_PUBLIC_EMAIL_DESTINO || 'info@creappsy.com',
   maxFileSize: 10 * 1024 * 1024,
   maxTotalSize: 100 * 1024 * 1024,
   rateLimitMs: parseInt(process.env.NEXT_PUBLIC_BLOCK_DURATION_MS || '900000'),
