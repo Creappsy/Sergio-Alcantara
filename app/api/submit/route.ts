@@ -72,8 +72,17 @@ function sanitizeInput(str: string): string {
 
 export async function POST(req: NextRequest) {
   try {
+    console.log('Submit API called at:', new Date().toISOString());
+    
     // Leer variables en tiempo de ejecución (para Dokploy)
     const { WEB3FORMS_KEY, EMAIL_DESTINO } = getEnvVars();
+    
+    console.log('Environment check:', { 
+      hasKey: !!WEB3FORMS_KEY, 
+      hasEmail: !!EMAIL_DESTINO,
+      keyLength: WEB3FORMS_KEY?.length,
+      emailLength: EMAIL_DESTINO?.length
+    });
     
     // Validar configuración antes de procesar
     if (!WEB3FORMS_KEY || !EMAIL_DESTINO) {
@@ -89,6 +98,7 @@ export async function POST(req: NextRequest) {
     }
 
     const ip = getClientIP(req);
+    console.log('Client IP:', ip);
     
     // Rate limiting
     const rateCheck = checkRateLimit(ip);
@@ -100,6 +110,9 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
+    console.log('Request body keys:', Object.keys(body));
+    console.log('Has pressEmail:', !!body.pressEmail);
+    console.log('Has pressName:', !!body.pressName);
     
     // Verificar honeypot
     if (body.website || body.email_confirm || body._gotcha) {
@@ -169,10 +182,15 @@ export async function POST(req: NextRequest) {
     formData.append('json_completo', JSON.stringify(body, null, 2));
 
     // Enviar a Web3Forms
+    console.log('Sending to Web3Forms...');
+    console.log('FormData entries:', Array.from(formData.entries()).map(([k, v]) => `${k}: ${typeof v === 'string' ? v.substring(0, 50) : 'file'}`));
+    
     const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       body: formData,
     });
+    
+    console.log('Web3Forms response status:', res.status);
 
     const responseText = await res.text();
     let resData;
