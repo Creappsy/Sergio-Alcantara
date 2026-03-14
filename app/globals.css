@@ -1045,7 +1045,300 @@ h1 span {
    📱 ADDITIONAL STYLES
    ═══════════════════════════════════════════════════════════════ */
 
-/* Voice input button */
+/* Voice guided input container */
+.voice-guided-container {
+  position: relative;
+  width: 100%;
+}
+
+.voice-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.voice-input-wrapper textarea {
+  width: 100%;
+  padding-right: 1rem;
+}
+
+/* Voice controls buttons - below textarea */
+.voice-controls {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Voice guide button - Dictar */
+.voice-guide-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(180deg, var(--gray-dark) 0%, var(--black-light) 100%);
+  border: 2px solid var(--blood-primary);
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  white-space: nowrap;
+}
+
+.voice-guide-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.voice-guide-btn:hover {
+  background: var(--blood-primary);
+  color: white;
+  box-shadow: var(--shadow-glow-blood);
+  transform: scale(1.05);
+}
+
+.voice-guide-btn.listening {
+  background: var(--blood-bright);
+  border-color: var(--blood-glow);
+  color: white;
+  animation: voicePulseMetal 1s ease-in-out infinite;
+}
+
+@keyframes voicePulseMetal {
+  0%, 100% { box-shadow: 0 0 10px rgba(220, 38, 38, 0.5); }
+  50% { box-shadow: 0 0 25px rgba(220, 38, 38, 0.8); }
+}
+
+/* Voice wave animation */
+.voice-wave {
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  margin: 0 2px;
+  background: white;
+  border-radius: 2px;
+  animation: voiceWaveMetal 1s ease-in-out infinite;
+}
+
+.voice-wave:nth-child(1) { animation-delay: 0s; }
+.voice-wave:nth-child(2) { animation-delay: 0.1s; }
+.voice-wave:nth-child(3) { animation-delay: 0.2s; }
+
+@keyframes voiceWaveMetal {
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1.5); }
+}
+
+/* Voice guide panel */
+.voice-guide-panel {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(180deg, var(--gray-dark) 0%, var(--black-medium) 100%);
+  border: 2px solid var(--blood-primary);
+  border-radius: var(--radius-xs);
+  box-shadow: var(--shadow-glow-blood);
+}
+
+.guide-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--gray-dark);
+}
+
+.guide-icon {
+  font-size: 1.5rem;
+}
+
+.guide-title {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+}
+
+.guide-close {
+  width: 28px;
+  height: 28px;
+  background: var(--blood-primary);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-normal);
+}
+
+.guide-close:hover {
+  background: var(--blood-bright);
+  transform: rotate(90deg);
+}
+
+.guide-progress {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.progress-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--gray-medium);
+  border: 2px solid var(--gray-light);
+  border-radius: 50%;
+  transition: all var(--transition-normal);
+}
+
+.progress-dot.active {
+  background: var(--blood-glow);
+  border-color: var(--blood-primary);
+  box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+}
+
+.progress-dot.completed {
+  background: var(--electric-glow);
+  border-color: var(--electric-light);
+}
+
+.guide-content {
+  padding: 1rem;
+  background: var(--black-void);
+  border-radius: var(--radius-xs);
+  margin-bottom: 1rem;
+}
+
+.step-number {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--blood-glow);
+  margin-bottom: 0.5rem;
+}
+
+.step-instruction {
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.listening-indicator {
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background: linear-gradient(90deg, var(--blood-dark), transparent);
+  border-left: 3px solid var(--blood-primary);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.listening-indicator .pulse {
+  width: 8px;
+  height: 8px;
+  background: var(--blood-glow);
+  border-radius: 50%;
+  animation: listeningPulse 1s ease-in-out infinite;
+}
+
+@keyframes listeningPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+
+.transcript-preview {
+  color: var(--electric-glow);
+  font-style: italic;
+}
+
+.guide-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.guide-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: var(--gray-dark);
+  border: 2px solid var(--gray-medium);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.guide-btn.primary {
+  background: var(--gradient-blood);
+  border-color: var(--blood-glow);
+  color: white;
+}
+
+.guide-btn.primary:hover {
+  box-shadow: var(--shadow-glow-blood);
+  transform: translateY(-2px);
+}
+
+.guide-btn.secondary {
+  color: var(--text-secondary);
+}
+
+.guide-btn.secondary:hover:not(:disabled) {
+  background: var(--gray-medium);
+  border-color: var(--gray-light);
+  color: var(--text-primary);
+}
+
+.guide-btn.success {
+  background: linear-gradient(180deg, var(--electric-dark), var(--electric-primary));
+  border-color: var(--electric-light);
+  color: white;
+}
+
+.guide-btn.success:hover {
+  box-shadow: var(--shadow-glow-electric);
+  transform: translateY(-2px);
+}
+
+.guide-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.guide-error {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(220, 38, 38, 0.1);
+  border: 2px solid var(--blood-bright);
+  border-radius: var(--radius-xs);
+  font-size: 0.875rem;
+  color: var(--blood-glow);
+}
+
+.guide-error strong {
+  color: var(--blood-bright);
+}
+
+/* Voice input standalone button (old style, deprecated) */
 .voice-btn {
   position: absolute;
   right: 0.75rem;
@@ -1238,4 +1531,181 @@ body.high-contrast .section {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   📋 ARRAY ITEMS & DYNAMIC LISTS
+   ═══════════════════════════════════════════════════════════════ */
+
+.sublabel {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gray-medium), transparent);
+  margin: var(--space-xl) 0;
+  border: none;
+}
+
+.array-wrap {
+  margin-top: var(--space-sm);
+}
+
+.array-item {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--black-medium);
+  border: 1px solid var(--gray-dark);
+  border-radius: var(--radius-xs);
+  position: relative;
+}
+
+.array-item:hover {
+  border-color: var(--blood-primary);
+}
+
+.array-item-fields {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+  flex: 1;
+}
+
+.array-item-fields.two {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.array-item-fields input,
+.array-item-fields select,
+.array-item-fields textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--black-void);
+  border: 1px solid var(--gray-dark);
+  border-radius: var(--radius-xs);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  transition: all var(--transition-normal);
+}
+
+.array-item-fields input:focus,
+.array-item-fields select:focus,
+.array-item-fields textarea:focus {
+  border-color: var(--blood-primary);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+}
+
+.array-item-fields input::placeholder,
+.array-item-fields textarea::placeholder {
+  color: var(--text-dark);
+}
+
+.btn-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: transparent;
+  border: 2px dashed var(--gray-medium);
+  border-radius: var(--radius-xs);
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  margin-top: var(--space-sm);
+}
+
+.btn-add:hover {
+  background: var(--gray-dark);
+  border-color: var(--blood-primary);
+  color: var(--blood-glow);
+}
+
+.btn-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  background: var(--blood-dark);
+  border: 1px solid var(--blood-primary);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-normal);
+}
+
+.btn-remove:hover {
+  background: var(--blood-bright);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Two column grid */
+.field-grid.two-col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Scroll to top button */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  background: var(--gradient-blood);
+  border: 2px solid var(--blood-primary);
+  border-radius: 50%;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-normal);
+  z-index: 100;
+  box-shadow: var(--shadow-glow-blood);
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 30px rgba(220, 38, 38, 0.6);
+}
+
+/* Voice guide panel additional styles */
+.guide-error {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(220, 38, 38, 0.1);
+  border: 2px solid var(--blood-bright);
+  border-radius: var(--radius-xs);
+  font-size: 0.875rem;
+  color: var(--blood-glow);
+}
+
+.guide-error strong {
+  color: var(--blood-bright);
 }
