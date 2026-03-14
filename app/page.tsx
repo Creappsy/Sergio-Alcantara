@@ -12,6 +12,10 @@ import {
   downloadJson,
   generateFileName,
 } from '@/lib/utils';
+import { useAccessibility } from '@/hooks/useAccessibility';
+import { VoiceInputButton } from '@/components/VoiceInputButton';
+import { AccessibilityPanel } from '@/components/AccessibilityPanel';
+import { VoiceInstructions } from '@/components/VoiceInstructions';
 import type { FormData, Member, Album, Video, Event, MerchItem, UploadedFile } from '@/lib/types';
 
 const initialFormData: FormData = {
@@ -525,20 +529,29 @@ export default function FormPage() {
   }
 
   return (
-    <div className="container">
-      <header>
-        <div className="logo-badge">Creappsy × Sergio Alcántara</div>
-        <h1>
-          DATOS DEL
-          <br />
-          <span>ARTISTA</span>
-        </h1>
-        <p className="subtitle">
-          Completa este formulario para que podamos construir
-          <br />
-          tu sitio web oficial. Todos los campos son editables después.
-        </p>
-      </header>
+    <>
+      <VoiceInstructions />
+      
+      <a href="#main-content" className="skip-link">
+        Saltar al contenido principal
+      </a>
+      
+      <AccessibilityPanel />
+      
+      <div className="container" id="main-content">
+        <header>
+          <div className="logo-badge">Creappsy × Sergio Alcántara</div>
+          <h1>
+            DATOS DEL
+            <br />
+            <span>ARTISTA</span>
+          </h1>
+          <p className="subtitle">
+            Completa este formulario para que podamos construir
+            <br />
+            tu sitio web oficial. Todos los campos son editables después.
+          </p>
+        </header>
 
       <div className="progress-wrap" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
         <div className="progress-info">
@@ -663,26 +676,38 @@ export default function FormPage() {
             <div className="field-grid">
               <div className="field full">
                 <label htmlFor="bioShort">Bio corta (máx. 160 palabras)</label>
-                <textarea
-                  id="bioShort"
-                  name="bioShort"
-                  value={formData.bioShort}
-                  onChange={handleInputChange}
-                  placeholder="Párrafo conciso para bios de redes y fichas de prensa..."
-                  rows={3}
-                />
+                <div className="voice-input-container">
+                  <textarea
+                    id="bioShort"
+                    name="bioShort"
+                    value={formData.bioShort}
+                    onChange={handleInputChange}
+                    placeholder="Párrafo conciso para bios de redes y fichas de prensa..."
+                    rows={3}
+                  />
+                  <VoiceInputButton
+                    onTranscript={(text) => setFormData(prev => ({ ...prev, bioShort: prev.bioShort + text }))}
+                    language="es-ES"
+                  />
+                </div>
                 <div className="hint">{formData.bioShort.trim().split(/\s+/).filter(Boolean).length} / 160 palabras</div>
               </div>
               <div className="field full">
                 <label htmlFor="bioLong">Bio extendida</label>
-                <textarea
-                  id="bioLong"
-                  name="bioLong"
-                  value={formData.bioLong}
-                  onChange={handleInputChange}
-                  placeholder="Historia del proyecto, hitos, estilo musical..."
-                  rows={6}
-                />
+                <div className="voice-input-container">
+                  <textarea
+                    id="bioLong"
+                    name="bioLong"
+                    value={formData.bioLong}
+                    onChange={handleInputChange}
+                    placeholder="Historia del proyecto, hitos, estilo musical..."
+                    rows={6}
+                  />
+                  <VoiceInputButton
+                    onTranscript={(text) => setFormData(prev => ({ ...prev, bioLong: prev.bioLong + text }))}
+                    language="es-ES"
+                  />
+                </div>
               </div>
               <div className="field full">
                 <label>Press Kit (PDF, ZIP)</label>
@@ -1372,25 +1397,37 @@ export default function FormPage() {
               </div>
               <div className="field full">
                 <label htmlFor="aiNotes">¿Usan IA para contenido?</label>
-                <textarea
-                  id="aiNotes"
-                  name="aiNotes"
-                  value={formData.aiNotes}
-                  onChange={handleInputChange}
-                  placeholder="Blog automático, subtitulado, traducción, generación de imágenes…"
-                  rows={3}
-                />
+                <div className="voice-input-container">
+                  <textarea
+                    id="aiNotes"
+                    name="aiNotes"
+                    value={formData.aiNotes}
+                    onChange={handleInputChange}
+                    placeholder="Blog automático, subtitulado, traducción, generación de imágenes…"
+                    rows={3}
+                  />
+                  <VoiceInputButton
+                    onTranscript={(text) => setFormData(prev => ({ ...prev, aiNotes: prev.aiNotes + text }))}
+                    language="es-ES"
+                  />
+                </div>
               </div>
               <div className="field full">
                 <label htmlFor="extraNotes">¿Alguna restricción, fecha fija o detalle especial?</label>
-                <textarea
-                  id="extraNotes"
-                  name="extraNotes"
-                  value={formData.extraNotes}
-                  onChange={handleInputChange}
-                  placeholder="Fecha de lanzamiento deseada, eventos próximos críticos…"
-                  rows={4}
-                />
+                <div className="voice-input-container">
+                  <textarea
+                    id="extraNotes"
+                    name="extraNotes"
+                    value={formData.extraNotes}
+                    onChange={handleInputChange}
+                    placeholder="Fecha de lanzamiento deseada, eventos próximos críticos…"
+                    rows={4}
+                  />
+                  <VoiceInputButton
+                    onTranscript={(text) => setFormData(prev => ({ ...prev, extraNotes: prev.extraNotes + text }))}
+                    language="es-ES"
+                  />
+                </div>
               </div>
             </div>
           </section>
@@ -1439,6 +1476,7 @@ export default function FormPage() {
         Desarrollado por <span>CREAPPSY</span> · Diseño & Desarrollo Web
       </footer>
     </div>
+    </>
   );
 }
 

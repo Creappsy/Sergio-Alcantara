@@ -1146,3 +1146,550 @@ footer span {
     color: #8888aa;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   ♿ ACCESIBILIDAD - PANEL DE CONTROLES
+   ═══════════════════════════════════════════════════════════════ */
+
+.accessibility-panel {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.a11y-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 140px;
+}
+
+.a11y-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.a11y-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.a11y-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🔤 TAMAÑOS DE FUENTE ACCESIBLES
+   ═══════════════════════════════════════════════════════════════ */
+
+body.font-size-large {
+  font-size: 18px;
+}
+
+body.font-size-large h1 {
+  font-size: 56px;
+}
+
+body.font-size-large h2 {
+  font-size: 28px;
+}
+
+body.font-size-large input,
+body.font-size-large textarea {
+  font-size: 18px;
+}
+
+body.font-size-x-large {
+  font-size: 22px;
+}
+
+body.font-size-x-large h1 {
+  font-size: 64px;
+}
+
+body.font-size-x-large h2 {
+  font-size: 32px;
+}
+
+body.font-size-x-large input,
+body.font-size-x-large textarea {
+  font-size: 22px;
+  padding: 18px 20px;
+}
+
+body.font-size-x-large .field label {
+  font-size: 14px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🎨 MODO ALTO CONTRASTE
+   ═══════════════════════════════════════════════════════════════ */
+
+body.high-contrast {
+  --bg: #000000;
+  --surface: #000000;
+  --card: #111111;
+  --border: #ffffff;
+  --text: #ffffff;
+  --muted: #cccccc;
+  --accent: #ffff00;
+  --accent2: #ffff00;
+  --success: #00ff00;
+}
+
+body.high-contrast body::before {
+  display: none;
+}
+
+body.high-contrast input,
+body.high-contrast textarea {
+  background: #000000;
+  border: 3px solid #ffffff;
+  color: #ffffff;
+}
+
+body.high-contrast input:focus,
+body.high-contrast textarea:focus {
+  border-color: #ffff00;
+  box-shadow: 0 0 0 4px rgba(255, 255, 0, 0.3);
+}
+
+body.high-contrast .btn-primary {
+  background: #ffff00;
+  color: #000000;
+  border: 3px solid #ffff00;
+}
+
+body.high-contrast .btn-primary:hover:not(:disabled) {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+body.high-contrast .field label {
+  color: #ffff00;
+}
+
+body.high-contrast .section-num {
+  background: #ffff00;
+  color: #000000;
+}
+
+body.high-contrast .a11y-btn {
+  border-color: #ffffff;
+}
+
+body.high-contrast .a11y-btn:hover,
+body.high-contrast .a11y-btn.active {
+  background: #ffff00;
+  border-color: #ffff00;
+  color: #000000;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🎤 BOTÓN DE DICTADO POR VOZ
+   ═══════════════════════════════════════════════════════════════ */
+
+.voice-input-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  min-width: 44px;
+  min-height: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.voice-input-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.voice-input-btn:active {
+  transform: scale(0.95);
+}
+
+.voice-input-btn.listening {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  animation: pulse-voice 1.5s ease-in-out infinite;
+}
+
+.voice-input-btn.mobile {
+  flex-direction: column;
+  padding: 12px 16px;
+  min-width: 60px;
+  min-height: 60px;
+  gap: 4px;
+}
+
+.voice-input-btn.mobile .mobile-text {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+@keyframes pulse-voice {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(233, 69, 96, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 15px rgba(233, 69, 96, 0);
+  }
+}
+
+.voice-wave {
+  width: 4px;
+  height: 16px;
+  background: currentColor;
+  border-radius: 2px;
+  animation: voice-wave 0.5s ease-in-out infinite;
+}
+
+.voice-wave:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.voice-wave:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+@keyframes voice-wave {
+  0%, 100% {
+    transform: scaleY(0.5);
+  }
+  50% {
+    transform: scaleY(1.5);
+  }
+}
+
+.voice-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.voice-error {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: var(--accent);
+  color: white;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.voice-unsupported {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  opacity: 0.5;
+}
+
+/* Contenedor para input con botón de voz */
+.voice-input-container {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.voice-input-container input,
+.voice-input-container textarea {
+  flex: 1;
+}
+
+/* Optimización para Android */
+@media (pointer: coarse) {
+  .voice-input-btn {
+    min-width: 48px;
+    min-height: 48px;
+  }
+  
+  .voice-input-btn:active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+}
+
+/* Movimiento reducido */
+body.reduced-motion *,
+body.reduced-motion *::before,
+body.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+body.reduced-motion .voice-input-btn.listening {
+  animation: none;
+}
+
+body.reduced-motion .voice-wave {
+  animation: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   📱 INSTRUCCIONES DE DICTADO PARA MÓVIL
+   ═══════════════════════════════════════════════════════════════ */
+
+.voice-instructions-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.voice-instructions-modal {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 24px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.voice-instructions-modal .close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 28px;
+  cursor: pointer;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.voice-instructions-modal .close-btn:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.voice-instructions-modal .icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.voice-instructions-modal h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.voice-instructions-modal p {
+  color: var(--muted);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.voice-instructions-modal ol {
+  text-align: left;
+  margin: 0 0 24px 0;
+  padding-left: 24px;
+  color: var(--text);
+}
+
+.voice-instructions-modal li {
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.voice-instructions-modal .tip {
+  background: rgba(63, 214, 143, 0.1);
+  border: 1px solid var(--success);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  text-align: left;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.voice-instructions-modal .btn-primary {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   👁️ MEJORAS DE LEGIBILIDAD
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Enfoque visible para navegación por teclado */
+*:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Skip link para navegación */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  border-radius: 0 0 8px 8px;
+  z-index: 10000;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Mejor contraste en texto de ayuda */
+.field small,
+.help-text {
+  color: var(--muted);
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+body.font-size-large .field small,
+body.font-size-large .help-text {
+  font-size: 0.9em;
+}
+
+body.font-size-x-large .field small,
+body.font-size-x-large .help-text {
+  font-size: 0.95em;
+}
+
+/* Indicadores de campo requerido más visibles */
+.required-indicator {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+body.high-contrast .required-indicator {
+  color: #ffff00;
+}
+
+/* Estados de error más visibles */
+input.invalid,
+textarea.invalid {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
+}
+
+body.high-contrast input.invalid,
+body.high-contrast textarea.invalid {
+  border-color: #ff0000;
+  box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   📱 RESPONSIVE - ACCESIBILIDAD MÓVIL
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .accessibility-panel {
+    bottom: 80px;
+    left: 10px;
+    padding: 8px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: calc(100% - 20px);
+  }
+
+  .a11y-btn {
+    min-width: auto;
+    padding: 8px 12px;
+  }
+
+  .a11y-label {
+    display: none;
+  }
+
+  .voice-input-btn {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 8px;
+  }
+}
