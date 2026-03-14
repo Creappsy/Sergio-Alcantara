@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  creappsy-form:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - B2_KEY_ID=${B2_KEY_ID}
+      - B2_APPLICATION_KEY=${B2_APPLICATION_KEY}
+      - B2_BUCKET_NAME=${B2_BUCKET_NAME:-creappsy}
+      - GOFILE_TOKEN=${GOFILE_TOKEN}
+      - GOFILE_FOLDER_ID=${GOFILE_FOLDER_ID}
+      - NEXT_PUBLIC_WEB3FORMS_KEY=${NEXT_PUBLIC_WEB3FORMS_KEY}
+      - NEXT_PUBLIC_EMAIL_DESTINO=${NEXT_PUBLIC_EMAIL_DESTINO}
+      - NEXT_PUBLIC_MAX_ATTEMPTS=${NEXT_PUBLIC_MAX_ATTEMPTS:-5}
+      - NEXT_PUBLIC_BLOCK_DURATION_MS=${NEXT_PUBLIC_BLOCK_DURATION_MS:-900000}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

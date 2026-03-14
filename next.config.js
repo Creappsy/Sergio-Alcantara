@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   images: {
     remotePatterns: [
       {
@@ -9,6 +10,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '*.gofile.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'f001.backblazeb2.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.backblazeb2.com',
       },
     ],
   },
