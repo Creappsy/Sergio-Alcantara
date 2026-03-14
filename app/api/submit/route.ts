@@ -174,7 +174,19 @@ export async function POST(req: NextRequest) {
       body: formData,
     });
 
-    const resData = await res.json();
+    const responseText = await res.text();
+    let resData;
+    
+    try {
+      resData = JSON.parse(responseText);
+    } catch (e) {
+      // Si no es JSON válido, probablemente es una página de error HTML
+      console.error('Web3Forms returned non-JSON response:', responseText.substring(0, 500));
+      return NextResponse.json(
+        { success: false, message: 'Invalid response from email service. Check your WEB3FORMS_KEY.' },
+        { status: 500 }
+      );
+    }
 
     if (!res.ok || !resData.success) {
       return NextResponse.json(
@@ -191,8 +203,11 @@ export async function POST(req: NextRequest) {
 
   } catch (error) {
     console.error('Submit error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : '';
+    console.error('Error details:', errorMessage, errorStack);
     return NextResponse.json(
-      { success: false, message: 'Internal server error' },
+      { success: false, message: `Internal server error: ${errorMessage}` },
       { status: 500 }
     );
   }

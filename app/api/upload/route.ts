@@ -43,10 +43,21 @@ async function authorizeB2() {
   });
 
   if (!res.ok) {
-    throw new Error('Backblaze auth failed');
+    const errorText = await res.text();
+    throw new Error(`Backblaze auth failed: ${res.status} - ${errorText}`);
   }
 
   const data = await res.json();
+  
+  // Verificar que tenemos bucketId
+  if (!data.bucketId && data.allowed?.bucketId) {
+    data.bucketId = data.allowed.bucketId;
+  }
+  
+  if (!data.bucketId) {
+    throw new Error('Backblaze auth succeeded but no bucketId found. Check your bucket permissions.');
+  }
+  
   b2AuthCache = data as typeof b2AuthCache;
   b2AuthExpiry = Date.now() + 23 * 60 * 60 * 1000;
 
@@ -103,15 +114,23 @@ async function uploadToGoFile(file: File, folder: string): Promise<string> {
   const { GOFILE_TOKEN, GOFILE_FOLDER_ID } = getEnvVars();
   
   // Obtener servidor
-  const serverRes = await fetch('https://api.gofile.io/createServer');
-  const serverData = await serverRes.json();
+  const serverRes = await fetch('https://api.gofile.io/servers');
+  const serverText = await serverRes.text();
+  let serverData;
   
-  if (!serverData.data?.server) {
-    throw new Error('Failed to get GoFile server');
+  try {
+    serverData = JSON.parse(serverText);
+  } catch (e) {
+    throw new Error(`GoFile server response is not valid JSON: ${serverText.substring(0, 100)}`);
+  }
+  
+  // Intentar diferentes formatos de respuesta
+  const server = serverData.data?.server || serverData.servers?.[0]?.name;
+  
+  if (!server) {
+    throw new Error(`Failed to get GoFile server. Response: ${JSON.stringify(serverData)}`);
   }
 
-  const server = serverData.data.server;
-  
   // Preparar FormData
   const formData = new FormData();
   formData.append('file', file);
@@ -126,14 +145,17 @@ async function uploadToGoFile(file: File, folder: string): Promise<string> {
     body: formData,
   });
 
-  if (!uploadRes.ok) {
-    throw new Error('GoFile upload failed');
+  const uploadText = await uploadRes.text();
+  let uploadData;
+  
+  try {
+    uploadData = JSON.parse(uploadText);
+  } catch (e) {
+    throw new Error(`GoFile upload response is not valid JSON: ${uploadText.substring(0, 200)}`);
   }
 
-  const uploadData = await uploadRes.json();
-  
   if (uploadData.status !== 'ok' || !uploadData.data) {
-    throw new Error('GoFile error');
+    throw new Error(`GoFile error: ${uploadData.status || 'unknown'} - ${JSON.stringify(uploadData)}`);
   }
 
   return uploadData.data.downloadPage || uploadData.data.directLink;
