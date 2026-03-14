@@ -300,26 +300,49 @@ export async function submitForm(
 
   try {
     // Enviar directamente a Web3Forms desde el cliente (evita Cloudflare)
+    console.log('[submitForm] Enviando a Web3Forms...');
+    console.log('[submitForm] WEB3FORMS_KEY presente:', !!WEB3FORMS_KEY);
+    console.log('[submitForm] EMAIL_DESTINO:', EMAIL_DESTINO);
+    
     const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       body: formData,
     });
+    
+    console.log('[submitForm] Response status:', res.status);
+    console.log('[submitForm] Response headers:', Object.fromEntries(res.headers.entries()));
 
-    const resData = await res.json();
+    const responseText = await res.text();
+    console.log('[submitForm] Response text (first 200 chars):', responseText.substring(0, 200));
+    
+    let resData;
+    try {
+      resData = JSON.parse(responseText);
+      console.log('[submitForm] Parsed response:', resData);
+    } catch (e) {
+      console.error('[submitForm] Failed to parse JSON:', e);
+      return {
+        success: false,
+        message: `Respuesta inválida de Web3Forms: ${responseText.substring(0, 100)}`,
+      };
+    }
 
     if (res.ok && resData.success) {
+      console.log('[submitForm] Éxito:', resData);
       return { 
         success: true, 
         message: 'Enviado correctamente',
         submissionId: resData.submissionId || `sub_${Date.now().toString(36)}`,
       };
     } else {
+      console.error('[submitForm] Error:', resData);
       return {
         success: false,
-        message: resData.message || 'Error al enviar a Web3Forms',
+        message: resData.message || `Error al enviar (status: ${res.status})`,
       };
     }
   } catch (err) {
+    console.error('[submitForm] Catch error:', err);
     const message = err instanceof Error ? err.message : 'Error de conexión';
     return { success: false, message };
   }
