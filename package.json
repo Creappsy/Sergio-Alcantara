@@ -2,9 +2,6 @@
   "name": "creappsy-form",
   "version": "1.2.0",
   "private": true,
-  "turbopack": {
-    "root": true
-  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

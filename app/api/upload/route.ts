@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Configuración desde variables de entorno
-const B2_KEY_ID = process.env.B2_KEY_ID!;
-const B2_APPLICATION_KEY = process.env.B2_APPLICATION_KEY!;
+const B2_KEY_ID = process.env.B2_KEY_ID || '';
+const B2_APPLICATION_KEY = process.env.B2_APPLICATION_KEY || '';
 const B2_BUCKET_NAME = process.env.B2_BUCKET_NAME || 'creappsy';
 const GOFILE_TOKEN = process.env.GOFILE_TOKEN;
 const GOFILE_FOLDER_ID = process.env.GOFILE_FOLDER_ID;
+
+// Verificar si Backblaze está configurado
+const isB2Configured = B2_KEY_ID && B2_APPLICATION_KEY;
 
 // Tipos de archivo permitidos
 const ALLOWED_TYPES = [
@@ -147,11 +150,17 @@ export async function POST(req: NextRequest) {
 
     let url: string;
 
-    // Intentar Backblaze primero
-    try {
-      url = await uploadToBackblaze(file, folder);
-    } catch (b2Error) {
-      console.warn('Backblaze failed, using GoFile:', b2Error);
+    // Intentar Backblaze primero (si está configurado)
+    if (isB2Configured) {
+      try {
+        url = await uploadToBackblaze(file, folder);
+      } catch (b2Error) {
+        console.warn('Backblaze failed, using GoFile:', b2Error);
+        url = await uploadToGoFile(file, folder);
+      }
+    } else {
+      // Usar GoFile directamente si Backblaze no está configurado
+      console.log('Backblaze not configured, using GoFile');
       url = await uploadToGoFile(file, folder);
     }
 
