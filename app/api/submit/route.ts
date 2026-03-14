@@ -84,6 +84,20 @@ export async function POST(req: NextRequest) {
       emailLength: EMAIL_DESTINO?.length
     });
     
+    // Validar formato de la API key (Web3Forms usa UUIDs)
+    const isValidKeyFormat = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(WEB3FORMS_KEY);
+    if (!isValidKeyFormat) {
+      console.error('Invalid WEB3FORMS_KEY format. Expected UUID format.');
+      return NextResponse.json(
+        { 
+          success: false, 
+          message: 'Invalid Web3Forms API key format',
+          details: 'The WEB3FORMS_KEY should be a UUID (e.g., xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx). Get one from https://web3forms.com/'
+        },
+        { status: 500 }
+      );
+    }
+    
     // Validar configuración antes de procesar
     if (!WEB3FORMS_KEY || !EMAIL_DESTINO) {
       console.error('Missing config:', { 
@@ -201,7 +215,11 @@ export async function POST(req: NextRequest) {
       // Si no es JSON válido, probablemente es una página de error HTML
       console.error('Web3Forms returned non-JSON response:', responseText.substring(0, 500));
       return NextResponse.json(
-        { success: false, message: 'Invalid response from email service. Check your WEB3FORMS_KEY.' },
+        { 
+          success: false, 
+          message: 'Invalid Web3Forms API key. Please get a valid key from https://web3forms.com/',
+          details: `Response status: ${res.status}. Make sure to set WEB3FORMS_KEY and NEXT_PUBLIC_WEB3FORMS_KEY in Dokploy environment variables.`
+        },
         { status: 500 }
       );
     }
