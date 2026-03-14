@@ -82,6 +82,7 @@ export default function FormPage() {
   const [progress, setProgress] = useState(0);
   const [currentSection, setCurrentSection] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [invalidFields, setInvalidFields] = useState<Set<string>>(new Set());
   const formRef = useRef<HTMLFormElement>(null);
 
   const updateProgress = useCallback(() => {
@@ -160,6 +161,14 @@ export default function FormPage() {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    // Clear invalid state when user starts typing
+    if (invalidFields.has(name)) {
+      setInvalidFields((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(name);
+        return newSet;
+      });
+    }
   };
 
   const handleFileChange = (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -336,6 +345,7 @@ export default function FormPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setInvalidFields(new Set());
     setIsSubmitting(true);
 
     const rateCheck = checkRateLimit();
@@ -349,15 +359,37 @@ export default function FormPage() {
       return;
     }
 
-    if (!formData.pressName.trim() || !formData.pressEmail.trim()) {
-      setError('Por favor completa: Nombre del manager/PR, Email de contacto');
+    // Validate required fields
+    const newInvalidFields = new Set<string>();
+    const missingFields: string[] = [];
+
+    if (!formData.pressName.trim()) {
+      newInvalidFields.add('pressName');
+      missingFields.push('Nombre del manager/PR');
+    }
+
+    if (!formData.pressEmail.trim()) {
+      newInvalidFields.add('pressEmail');
+      missingFields.push('Email de contacto');
+    } else if (!validateEmail(formData.pressEmail)) {
+      newInvalidFields.add('pressEmail');
+      setError('El email de contacto no es válido.');
+      setInvalidFields(newInvalidFields);
       setIsSubmitting(false);
+      // Scroll to first invalid field
+      document.getElementById('pressEmail')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
-    if (formData.pressEmail && !validateEmail(formData.pressEmail)) {
-      setError('El email de contacto no es válido.');
+    if (missingFields.length > 0) {
+      setError(`Por favor completa: ${missingFields.join(', ')}`);
+      setInvalidFields(newInvalidFields);
       setIsSubmitting(false);
+      // Scroll to first invalid field
+      const firstInvalid = newInvalidFields.values().next().value;
+      if (firstInvalid) {
+        document.getElementById(firstInvalid)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
 
@@ -1210,6 +1242,7 @@ export default function FormPage() {
                   onChange={handleInputChange}
                   placeholder="Tu nombre"
                   required
+                  className={invalidFields.has('pressName') ? 'invalid' : ''}
                 />
               </div>
               <div className="field">
@@ -1225,6 +1258,7 @@ export default function FormPage() {
                   onChange={handleInputChange}
                   placeholder="tu@email.com"
                   required
+                  className={invalidFields.has('pressEmail') ? 'invalid' : ''}
                 />
               </div>
               <div className="field full">

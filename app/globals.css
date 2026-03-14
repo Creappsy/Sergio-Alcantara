@@ -342,7 +342,20 @@ input.invalid,
 textarea.invalid,
 select.invalid {
   border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.3);
   animation: shake 0.3s ease;
+}
+
+.field:has(input.invalid) label,
+.field:has(textarea.invalid) label,
+.field:has(select.invalid) label {
+  color: var(--accent);
+}
+
+.field:has(input.invalid) .required-indicator,
+.field:has(textarea.invalid) .required-indicator,
+.field:has(select.invalid) .required-indicator {
+  animation: pulse 1s infinite;
 }
 
 @keyframes shake {
