@@ -13,10 +13,38 @@ import {
   generateFileName,
 } from '@/lib/utils';
 import { useAccessibility } from '@/hooks/useAccessibility';
-import { VoiceInputButton } from '@/components/VoiceInputButton';
+import { VoiceGuidedInput } from '@/components/VoiceGuidedInput';
 import { AccessibilityPanel } from '@/components/AccessibilityPanel';
 import { VoiceInstructions } from '@/components/VoiceInstructions';
 import type { FormData, Member, Album, Video, Event, MerchItem, UploadedFile } from '@/lib/types';
+
+// Instrucciones para el asistente de voz
+const voiceInstructions = {
+  bioShort: [
+    "Di el nombre artístico o del proyecto musical",
+    "Menciona el género musical principal",
+    "Describe en una frase tu estilo o propuesta única",
+    "Agrega tu ciudad o región de origen"
+  ],
+  bioLong: [
+    "Cuéntanos cómo empezó el proyecto: año y circunstancias",
+    "Menciona los miembros principales y sus roles",
+    "Describe tus influencias musicales",
+    "Habla sobre tus logros más importantes hasta ahora",
+    "Menciona próximos proyectos o lanzamientos"
+  ],
+  aiNotes: [
+    "¿Usas alguna herramienta de IA actualmente?",
+    "¿Para qué usas la IA? Por ejemplo: letras, imágenes, videos",
+    "¿Quieres integrar más herramientas de IA en tu proyecto?"
+  ],
+  extraNotes: [
+    "¿Tienes alguna fecha límite importante para el sitio web?",
+    "Menciona eventos próximos donde necesites el sitio listo",
+    "¿Hay alguna restricción o requisito especial que debamos saber?",
+    "¿Algo más que quieras contarnos sobre tu proyecto?"
+  ]
+};
 
 const initialFormData: FormData = {
   brandName: '',
@@ -676,38 +704,28 @@ export default function FormPage() {
             <div className="field-grid">
               <div className="field full">
                 <label htmlFor="bioShort">Bio corta (máx. 160 palabras)</label>
-                <div className="voice-input-container">
-                  <textarea
-                    id="bioShort"
-                    name="bioShort"
-                    value={formData.bioShort}
-                    onChange={handleInputChange}
-                    placeholder="Párrafo conciso para bios de redes y fichas de prensa..."
-                    rows={3}
-                  />
-                  <VoiceInputButton
-                    onTranscript={(text) => setFormData(prev => ({ ...prev, bioShort: prev.bioShort + text }))}
-                    language="es-ES"
-                  />
-                </div>
-                <div className="hint">{formData.bioShort.trim().split(/\s+/).filter(Boolean).length} / 160 palabras</div>
+                <VoiceGuidedInput
+                  fieldName="bioShort"
+                  instructions={voiceInstructions.bioShort}
+                  value={formData.bioShort}
+                  onChange={handleInputChange}
+                  onTranscript={(text) => setFormData(prev => ({ ...prev, bioShort: prev.bioShort + text }))}
+                  placeholder="Párrafo conciso para bios de redes y fichas de prensa..."
+                  rows={3}
+                  hint={`${formData.bioShort.trim().split(/\s+/).filter(Boolean).length} / 160 palabras`}
+                />
               </div>
               <div className="field full">
                 <label htmlFor="bioLong">Bio extendida</label>
-                <div className="voice-input-container">
-                  <textarea
-                    id="bioLong"
-                    name="bioLong"
-                    value={formData.bioLong}
-                    onChange={handleInputChange}
-                    placeholder="Historia del proyecto, hitos, estilo musical..."
-                    rows={6}
-                  />
-                  <VoiceInputButton
-                    onTranscript={(text) => setFormData(prev => ({ ...prev, bioLong: prev.bioLong + text }))}
-                    language="es-ES"
-                  />
-                </div>
+                <VoiceGuidedInput
+                  fieldName="bioLong"
+                  instructions={voiceInstructions.bioLong}
+                  value={formData.bioLong}
+                  onChange={handleInputChange}
+                  onTranscript={(text) => setFormData(prev => ({ ...prev, bioLong: prev.bioLong + text }))}
+                  placeholder="Historia del proyecto, hitos, estilo musical..."
+                  rows={6}
+                />
               </div>
               <div className="field full">
                 <label>Press Kit (PDF, ZIP)</label>
