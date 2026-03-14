@@ -466,11 +466,6 @@ export default function FormPage() {
     }
   };
 
-  const copyJson = () => {
-    const json = JSON.stringify(formData, null, 2);
-    navigator.clipboard.writeText(json);
-  };
-
   const getFilePreview = (files: File[]) => {
     return files.map((file, idx) => {
       const isImage = file.type.startsWith('image/');
@@ -525,10 +520,6 @@ export default function FormPage() {
             </>
           )}
         </p>
-        <pre className="json-output">{JSON.stringify(formData, null, 2)}</pre>
-        <button className="btn-copy" onClick={copyJson}>
-          📋 Copiar JSON
-        </button>
       </div>
     );
   }
