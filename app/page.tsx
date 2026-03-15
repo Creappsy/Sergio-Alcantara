@@ -469,7 +469,7 @@ export default function FormPage() {
       const uploaded: Record<string, UploadedFile[]> = {};
       for (const { field, files } of fileFields) {
         if (files.length > 0) {
-          const result = await uploadFiles(files, field as string);
+          const result = await uploadFiles(files, field as string, formData.brandName || formData.pressName || 'cliente');
           if (result.length > 0) {
             uploaded[field] = result;
           }

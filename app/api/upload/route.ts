@@ -17,6 +17,27 @@ function isB2Configured() {
   return !!(B2_KEY_ID && B2_APPLICATION_KEY);
 }
 
+// Sanitizar nombre para carpeta (sin caracteres especiales)
+function sanitizeFolderName(name: string): string {
+  if (!name) return 'unknown';
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Quitar acentos
+    .replace(/[^a-z0-9_-]/g, '-') // Solo alfanuméricos, guiones y guiones bajos
+    .replace(/-+/g, '-') // Sin guiones dobles
+    .replace(/^-|-$/g, '') // Sin guiones al inicio/final
+    .substring(0, 50); // Máximo 50 caracteres
+}
+
+// Generar ID único para submission
+function generateSubmissionId(): string {
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10);
+  const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '');
+  return `${dateStr}_${timeStr}`;
+}
+
 // Tipos de archivo permitidos
 const ALLOWED_TYPES = [
   'image/jpeg', 'image/png', 'image/webp', 'image/svg+xml',
@@ -88,7 +109,7 @@ async function authorizeB2() {
   return b2AuthCache;
 }
 
-async function uploadToBackblaze(file: File, folder: string): Promise<string> {
+async function uploadToBackblaze(file: File, folderPath: string): Promise<string> {
   const auth = await authorizeB2();
   
   if (!auth) {
@@ -111,8 +132,8 @@ async function uploadToBackblaze(file: File, folder: string): Promise<string> {
 
   const uploadUrlData = await uploadUrlRes.json();
   
-  // Subir archivo
-  const fileName = `${folder}/${Date.now()}_${file.name}`;
+  // Subir archivo con la ruta completa de carpeta
+  const fileName = `${folderPath}/${Date.now()}_${file.name}`;
   const fileBuffer = await file.arrayBuffer();
   
   const uploadRes = await fetch(uploadUrlData.uploadUrl, {
@@ -134,7 +155,7 @@ async function uploadToBackblaze(file: File, folder: string): Promise<string> {
   return `${auth.downloadUrl}/file/${B2_BUCKET_NAME}/${encodeURIComponent(fileName)}`;
 }
 
-async function uploadToGoFile(file: File, folder: string): Promise<string> {
+async function uploadToGoFile(file: File, folderPath: string): Promise<string> {
   const { GOFILE_TOKEN, GOFILE_FOLDER_ID } = getEnvVars();
   
   // Obtener servidor
@@ -190,6 +211,7 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get('file') as File;
     const folder = (formData.get('folder') as string) || 'general';
+    const clientName = (formData.get('clientName') as string) || 'unknown';
     
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -205,20 +227,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'File too large (max 10MB)' }, { status: 400 });
     }
 
+    // Crear estructura de carpetas: cliente/submission_id/tipo_archivo
+    const sanitizedClient = sanitizeFolderName(clientName);
+    const submissionId = generateSubmissionId();
+    const folderPath = `${sanitizedClient}/${submissionId}/${folder}`;
+
     let url: string;
 
     // Intentar Backblaze primero (si está configurado)
     if (isB2Configured()) {
       try {
-        url = await uploadToBackblaze(file, folder);
+        url = await uploadToBackblaze(file, folderPath);
       } catch (b2Error) {
         console.warn('Backblaze failed, using GoFile:', b2Error);
-        url = await uploadToGoFile(file, folder);
+        url = await uploadToGoFile(file, folderPath);
       }
     } else {
       // Usar GoFile directamente si Backblaze no está configurado
       console.log('Backblaze not configured, using GoFile');
-      url = await uploadToGoFile(file, folder);
+      url = await uploadToGoFile(file, folderPath);
     }
 
     return NextResponse.json({ 
@@ -227,6 +254,7 @@ export async function POST(req: NextRequest) {
       name: file.name,
       size: file.size,
       type: file.type,
+      folderPath, // Incluir la ruta de carpeta en la respuesta
     });
 
   } catch (error) {

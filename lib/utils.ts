@@ -199,6 +199,7 @@ export function validateRequired(value: string): { valid: boolean; error?: strin
 export async function uploadFiles(
   files: File[],
   folder: string,
+  clientName?: string,
   onProgress?: (fileName: string) => void
 ): Promise<UploadedFile[]> {
   const uploadedFiles: UploadedFile[] = [];
@@ -217,6 +218,9 @@ export async function uploadFiles(
       const formData = new FormData();
       formData.append('file', file);
       formData.append('folder', folder);
+      if (clientName) {
+        formData.append('clientName', clientName);
+      }
       
       const res = await fetch(UPLOAD_API_URL, {
         method: 'POST',
