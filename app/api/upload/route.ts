@@ -30,12 +30,14 @@ function sanitizeFolderName(name: string): string {
     .substring(0, 50); // Máximo 50 caracteres
 }
 
-// Generar ID único para submission
+// Generar ID único para submission (con sufijo aleatorio para evitar colisiones)
 function generateSubmissionId(): string {
   const now = new Date();
   const dateStr = now.toISOString().slice(0, 10);
   const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '');
-  return `${dateStr}_${timeStr}`;
+  // Añadir sufijo aleatorio de 4 caracteres para evitar colisiones de múltiples envíos
+  const randomSuffix = Math.random().toString(36).substring(2, 6);
+  return `${dateStr}_${timeStr}_${randomSuffix}`;
 }
 
 // Tipos de archivo permitidos
