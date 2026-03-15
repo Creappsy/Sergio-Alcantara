@@ -1,0 +1,35 @@
+{
+  "name": "@creappsy/web-design-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for web design and code generation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "web-design-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts"
+  },
+  "keywords": [
+    "mcp",
+    "web-design",
+    "code-generation",
+    "html",
+    "css",
+    "react"
+  ],
+  "author": "Creappsy",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.37",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
