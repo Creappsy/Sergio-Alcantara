@@ -194,6 +194,218 @@ const layouts = {
   </div>
 </section>
 `,
+  testimonials: (style: string, colors: { primary: string; secondary: string }) => `
+<!-- Testimonials Section - ${style} style -->
+<section class="testimonials" style="
+  padding: 4rem 2rem;
+  background: linear-gradient(180deg, #f8f9fa 0%, white 100%);
+">
+  <div class="container" style="max-width: 1200px; margin: 0 auto;">
+    <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: ${colors.primary};">Lo que dicen nuestros clientes</h2>
+    <div class="testimonials-grid" style="
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    ">
+      <div class="testimonial-card" style="
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      ">
+        <div class="quote" style="font-size: 2rem; color: ${colors.primary}; margin-bottom: 1rem;">"</div>
+        <p style="color: #666; margin-bottom: 1.5rem; font-style: italic;">"Excelente servicio y atención al cliente. Muy recomendable."</p>
+        <div class="author" style="display: flex; align-items: center; gap: 1rem;">
+          <div class="avatar" style="width: 50px; height: 50px; background: ${colors.primary}; border-radius: 50%;"></div>
+          <div>
+            <strong>Juan Pérez</strong>
+            <p style="margin: 0; font-size: 0.875rem; color: #888;">CEO, Empresa ABC</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card" style="
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      ">
+        <div class="quote" style="font-size: 2rem; color: ${colors.primary}; margin-bottom: 1rem;">"</div>
+        <p style="color: #666; margin-bottom: 1.5rem; font-style: italic;">"Superaron todas mis expectativas. Increíble trabajo."</p>
+        <div class="author" style="display: flex; align-items: center; gap: 1rem;">
+          <div class="avatar" style="width: 50px; height: 50px; background: ${colors.secondary}; border-radius: 50%;"></div>
+          <div>
+            <strong>María García</strong>
+            <p style="margin: 0; font-size: 0.875rem; color: #888;">Directora, XYZ Corp</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+`,
+  footer: (style: string, colors: { primary: string; secondary: string }) => `
+<!-- Footer Section - ${style} style -->
+<footer style="
+  background: ${colors.primary};
+  color: white;
+  padding: 3rem 2rem;
+">
+  <div class="container" style="max-width: 1200px; margin: 0 auto;">
+    <div class="footer-grid" style="
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    ">
+      <div class="footer-col">
+        <h4 style="margin-bottom: 1rem;">Logo</h4>
+        <p style="opacity: 0.8; font-size: 0.875rem;">Tu descripción breve de la empresa aquí.</p>
+      </div>
+      <div class="footer-col">
+        <h4 style="margin-bottom: 1rem;">Enlaces</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 0.5rem;"><a href="#" style="color: white; text-decoration: none; opacity: 0.8;">Inicio</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="#" style="color: white; text-decoration: none; opacity: 0.8;">Servicios</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="#" style="color: white; text-decoration: none; opacity: 0.8;">Precios</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="#" style="color: white; text-decoration: none; opacity: 0.8;">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 style="margin-bottom: 1rem;">Contacto</h4>
+        <p style="opacity: 0.8; font-size: 0.875rem;">email@ejemplo.com</p>
+        <p style="opacity: 0.8; font-size: 0.875rem;">+34 600 000 000</p>
+      </div>
+      <div class="footer-col">
+        <h4 style="margin-bottom: 1rem;">Síguenos</h4>
+        <div style="display: flex; gap: 1rem;">
+          <a href="#" style="color: white; text-decoration: none;">FB</a>
+          <a href="#" style="color: white; text-decoration: none;">TW</a>
+          <a href="#" style="color: white; text-decoration: none;">IG</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 2rem; text-align: center; opacity: 0.8; font-size: 0.875rem;">
+      © 2024 Tu Empresa. Todos los derechos reservados.
+    </div>
+  </div>
+</footer>
+`,
+  contact: (style: string, colors: { primary: string; secondary: string }) => `
+<!-- Contact Section - ${style} style -->
+<section class="contact" style="
+  padding: 4rem 2rem;
+  background: white;
+">
+  <div class="container" style="max-width: 1200px; margin: 0 auto;">
+    <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem; color: ${colors.primary};">Contáctanos</h2>
+    <p style="text-align: center; color: #666; margin-bottom: 3rem;">Estamos aquí para ayudarte</p>
+    <div class="contact-grid" style="
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    ">
+      <div class="contact-info">
+        <div style="margin-bottom: 2rem;">
+          <h4 style="color: ${colors.primary}; margin-bottom: 0.5rem;">Email</h4>
+          <p>contacto@ejemplo.com</p>
+        </div>
+        <div style="margin-bottom: 2rem;">
+          <h4 style="color: ${colors.primary}; margin-bottom: 0.5rem;">Teléfono</h4>
+          <p>+34 600 000 000</p>
+        </div>
+        <div style="margin-bottom: 2rem;">
+          <h4 style="color: ${colors.primary}; margin-bottom: 0.5rem;">Dirección</h4>
+          <p>Calle Ejemplo, 123<br/>28001 Madrid, España</p>
+        </div>
+      </div>
+      <form style="
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 12px;
+      ">
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Nombre</label>
+          <input type="text" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px;" />
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Email</label>
+          <input type="email" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px;" />
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Mensaje</label>
+          <textarea style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; min-height: 100px;"></textarea>
+        </div>
+        <button type="submit" style="
+          width: 100%;
+          padding: 1rem;
+          background: ${colors.primary};
+          color: white;
+          border: none;
+          border-radius: 6px;
+          font-weight: 600;
+          cursor: pointer;
+        ">Enviar Mensaje</button>
+      </form>
+    </div>
+  </div>
+</section>
+`,
+  'full-page': (style: string, colors: { primary: string; secondary: string }) => `
+<!-- Full Page - ${style} style -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Página Web</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; line-height: 1.6; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+  </style>
+</head>
+<body>
+  <nav style="background: white; padding: 1rem 2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+      <strong style="color: ${colors.primary};">Logo</strong>
+      <div style="display: flex; gap: 2rem;">
+        <a href="#" style="text-decoration: none; color: #333;">Inicio</a>
+        <a href="#" style="text-decoration: none; color: #333;">Nosotros</a>
+        <a href="#" style="text-decoration: none; color: #333;">Servicios</a>
+        <a href="#" style="text-decoration: none; color: #333;">Contacto</a>
+      </div>
+    </div>
+  </nav>
+  <header style="background: linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%); color: white; padding: 6rem 2rem; text-align: center;">
+    <h1 style="font-size: 3rem; margin-bottom: 1rem;">Bienvenido a Mi Sitio</h1>
+    <p style="font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.9;">Tu subtítulo aquí</p>
+    <a href="#contacto" style="display: inline-block; padding: 1rem 2rem; background: white; color: ${colors.primary}; text-decoration: none; border-radius: 8px; font-weight: 600;">Contactar</a>
+  </header>
+  <section style="padding: 4rem 2rem; text-align: center;">
+    <h2 style="font-size: 2rem; margin-bottom: 3rem; color: ${colors.primary};">Nuestros Servicios</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+      <div style="padding: 2rem; background: #f8f9fa; border-radius: 12px;">
+        <h3 style="color: ${colors.primary}; margin-bottom: 1rem;">Servicio 1</h3>
+        <p>Descripción del servicio</p>
+      </div>
+      <div style="padding: 2rem; background: #f8f9fa; border-radius: 12px;">
+        <h3 style="color: ${colors.primary}; margin-bottom: 1rem;">Servicio 2</h3>
+        <p>Descripción del servicio</p>
+      </div>
+      <div style="padding: 2rem; background: #f8f9fa; border-radius: 12px;">
+        <h3 style="color: ${colors.primary}; margin-bottom: 1rem;">Servicio 3</h3>
+        <p>Descripción del servicio</p>
+      </div>
+    </div>
+  </section>
+  <footer id="contacto" style="background: ${colors.primary}; color: white; padding: 3rem 2rem; text-align: center;">
+    <h2 style="margin-bottom: 1rem;">¿Listo para empezar?</h2>
+    <p style="margin-bottom: 2rem; opacity: 0.9;">Contáctanos hoy mismo</p>
+    <a href="mailto:info@ejemplo.com" style="display: inline-block; padding: 1rem 2rem; background: white; color: ${colors.primary}; text-decoration: none; border-radius: 8px; font-weight: 600;">Enviar Email</a>
+  </footer>
+</body>
+</html>
+`,
 };
 
 const components = {
@@ -289,6 +501,175 @@ const components = {
     cursor: pointer;
   ">Enviar</button>
 </form>
+`,
+  modal: (variant: string, style: string) => `
+<!-- Modal Component - ${style} style -->
+<div class="modal-overlay" style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+">
+  <div class="modal" style="
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  ">
+    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <h3 style="margin: 0;">Título del Modal</h3>
+      <button style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+    </div>
+    <div class="modal-body" style="margin-bottom: 1.5rem;">
+      <p>Contenido del modal aquí.</p>
+    </div>
+    <div class="modal-footer" style="display: flex; gap: 1rem; justify-content: flex-end;">
+      <button style="padding: 0.5rem 1rem; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancelar</button>
+      <button style="padding: 0.5rem 1rem; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer;">Guardar</button>
+    </div>
+  </div>
+</div>
+`,
+  navbar: (variant: string, style: string) => `
+<!-- Navbar Component - ${style} style -->
+<nav style="
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+">
+  <div class="logo" style="font-size: 1.5rem; font-weight: 700; color: #007bff;">Logo</div>
+  <div class="nav-links" style="display: flex; gap: 2rem;">
+    <a href="#" style="text-decoration: none; color: #333;">Inicio</a>
+    <a href="#" style="text-decoration: none; color: #333;">Servicios</a>
+    <a href="#" style="text-decoration: none; color: #333;">Precios</a>
+    <a href="#" style="text-decoration: none; color: #333;">Contacto</a>
+  </div>
+  <button style="padding: 0.5rem 1.5rem; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer;">CTA</button>
+</nav>
+`,
+  sidebar: (variant: string, style: string) => `
+<!-- Sidebar Component - ${style} style -->
+<aside style="
+  width: 250px;
+  background: #f8f9fa;
+  padding: 2rem;
+  height: 100vh;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+">
+  <div class="sidebar-header" style="margin-bottom: 2rem;">
+    <h3 style="color: #007bff;">Menú</h3>
+  </div>
+  <ul style="list-style: none; padding: 0; margin: 0;">
+    <li style="margin-bottom: 1rem;">
+      <a href="#" style="display: block; padding: 0.75rem; color: #333; text-decoration: none; border-radius: 6px; transition: background 0.2s;">
+        Dashboard
+      </a>
+    </li>
+    <li style="margin-bottom: 1rem;">
+      <a href="#" style="display: block; padding: 0.75rem; color: #333; text-decoration: none; border-radius: 6px; transition: background 0.2s;">
+        Perfil
+      </a>
+    </li>
+    <li style="margin-bottom: 1rem;">
+      <a href="#" style="display: block; padding: 0.75rem; color: #333; text-decoration: none; border-radius: 6px; transition: background 0.2s;">
+        Configuración
+      </a>
+    </li>
+  </ul>
+</aside>
+`,
+  table: (variant: string, style: string) => `
+<!-- Table Component - ${style} style -->
+<table style="
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+">
+  <thead style="background: #007bff; color: white;">
+    <tr>
+      <th style="padding: 1rem; text-align: left;">Nombre</th>
+      <th style="padding: 1rem; text-align: left;">Email</th>
+      <th style="padding: 1rem; text-align: left;">Rol</th>
+      <th style="padding: 1rem; text-align: left;">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom: 1px solid #eee;">
+      <td style="padding: 1rem;">Juan Pérez</td>
+      <td style="padding: 1rem;">juan@ejemplo.com</td>
+      <td style="padding: 1rem;">Admin</td>
+      <td style="padding: 1rem;">
+        <button style="padding: 0.25rem 0.5rem; margin-right: 0.5rem; cursor: pointer;">Editar</button>
+        <button style="padding: 0.25rem 0.5rem; cursor: pointer;">Eliminar</button>
+      </td>
+    </tr>
+    <tr style="border-bottom: 1px solid #eee;">
+      <td style="padding: 1rem;">María García</td>
+      <td style="padding: 1rem;">maria@ejemplo.com</td>
+      <td style="padding: 1rem;">Usuario</td>
+      <td style="padding: 1rem;">
+        <button style="padding: 0.25rem 0.5rem; margin-right: 0.5rem; cursor: pointer;">Editar</button>
+        <button style="padding: 0.25rem 0.5rem; cursor: pointer;">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`,
+  list: (variant: string, style: string) => `
+<!-- List Component - ${style} style -->
+<ul style="
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+">
+  <li style="
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  ">
+    <span style="width: 8px; height: 8px; background: #007bff; border-radius: 50%;"></span>
+    <span>Elemento de lista 1</span>
+  </li>
+  <li style="
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  ">
+    <span style="width: 8px; height: 8px; background: #007bff; border-radius: 50%;"></span>
+    <span>Elemento de lista 2</span>
+  </li>
+  <li style="
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  ">
+    <span style="width: 8px; height: 8px; background: #007bff; border-radius: 50%;"></span>
+    <span>Elemento de lista 3</span>
+  </li>
+</ul>
 `,
 };
 
